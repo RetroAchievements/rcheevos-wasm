@@ -1,0 +1,18 @@
+{
+	"include": ["src", "src/types/wasm.d.ts"],
+	"files": ["src/types/wasm.d.ts"],
+	"compilerOptions": {
+		"target": "ES2022",
+		"noEmit": true,
+		"module": "ES2022",
+		"moduleResolution": "bundler",
+		"lib": ["dom", "ES2022"],
+		"declaration": true,
+		"declarationDir": "dist/types",
+		"strict": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	}
+}

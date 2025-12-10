@@ -1,0 +1,68 @@
+{
+	"name": "rcheevos",
+	"version": "0.1.0",
+	"author": "Miguel Piedrafita <npm@miguel.build>",
+	"license": "MIT",
+	"description": "Generate ROM hashes using a WASM build of rcheevos",
+	"sideEffects": false,
+	"type": "module",
+	"main": "./dist/umd/index.js",
+	"module": "./dist/es/index.js",
+	"types": "./dist/types/entrypoints/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/types/entrypoints/index.d.ts",
+			"node": "./dist/node/index.cjs",
+			"import": "./dist/es/index.js",
+			"default": "./dist/cjs/index.cjs"
+		},
+		"./slim": {
+			"types": "./dist/types/entrypoints/index.d.ts",
+			"node": "./dist/node/index.cjs",
+			"import": "./dist/es-slim/index_slim.js",
+			"default": "./dist/cjs-slim/index_slim.cjs"
+		},
+		"./rcheevos.wasm": "./dist/rcheevos.wasm",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+        "prepare": "bun run build",
+		"build:js": "rollup --config",
+		"build:wasm": "./scripts/build-wasm.sh",
+		"build": "bun run build:wasm && bun run build:js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/m1guelpf/rcheevos-wasm.git"
+	},
+	"keywords": [
+		"wasm",
+		"rcheevos",
+		"retroachievements"
+	],
+	"devDependencies": {
+		"@rollup/plugin-typescript": "^12.3.0",
+		"@rollup/plugin-wasm": "^6.2.2",
+		"prettier": "^3.7.4",
+		"prettier-plugin-sort-imports-desc": "^1.0.0",
+		"rollup": "^4.53.3",
+		"tslib": "^2.8.1"
+	},
+	"prettier": {
+		"semi": false,
+		"tabWidth": 4,
+		"useTabs": true,
+		"printWidth": 120,
+		"singleQuote": true,
+		"parser": "babel-ts",
+		"trailingComma": "es5",
+		"arrowParens": "avoid",
+		"bracketSpacing": true,
+		"plugins": [
+			"prettier-plugin-sort-imports-desc"
+		]
+	}
+}
