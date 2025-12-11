@@ -29,9 +29,6 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install Emscripten
-        uses: numworks/setup-emscripten@latest
-
       - name: Configure git
         uses: qoomon/actions--setup-git@v1.1.1
 
@@ -40,12 +37,16 @@ jobs:
         run: .github/scripts/find-rcheevos-release.sh
 
       - name: Stop if already up to date
-        if: steps.detect.outputs.latest_commit == steps.detect.outputs.current_commit || steps.detect.outputs.latest_tag == ''
         run: echo "rcheevos is already up to date."
+        if: steps.detect.outputs.latest_commit == steps.detect.outputs.current_commit || steps.detect.outputs.latest_tag == ''
 
       - name: Update submodule to latest tag
-        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
         run: .github/scripts/update-rcheevos-submodule.sh "${{ steps.detect.outputs.latest_tag }}"
+        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
+
+      - name: Install Emscripten
+        uses: numworks/setup-emscripten@latest
+        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
 
       - name: Install dependencies
         if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
@@ -56,15 +57,15 @@ jobs:
         run: bun run build
 
       - name: Bump package version
-        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
         run: bunx npm version patch -f
+        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
 
       - name: Publish package
-        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
         run: bun publish
+        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
         env:
           NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }} # token expires March 13, 2025. update to OIDC before then
 
       - name: Push changes
-        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
         run: git push origin HEAD
+        if: steps.detect.outputs.latest_commit != steps.detect.outputs.current_commit && steps.detect.outputs.latest_tag != ''
